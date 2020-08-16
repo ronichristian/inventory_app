@@ -8,6 +8,9 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VueChatScroll from 'vue-chat-scroll'
+Vue.use(VueChatScroll)
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -44,6 +47,8 @@ Vue.component('order_invoice', require('./components/OrderInvoice.vue').default)
 Vue.component('capital_and_gross', require('./components/CapitalAndGross.vue').default);
 Vue.component('most_bought_graph', require('./components/MostBoughtProducts.vue').default);
 Vue.component('net_worth', require('./components/Home.vue').default);
+Vue.component('chats', require('./components/Chats.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

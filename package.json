@@ -26,9 +26,12 @@
     "dependencies": {
         "admin-lte": "^3.0.0-alpha.2",
         "chart.js": "^2.9.3",
+        "laravel-echo": "^1.8.1",
         "laravel-vue-datatable": "^0.5.7",
         "moment": "^2.24.0",
+        "pusher-js": "^7.0.0",
         "vue-chartjs": "^3.5.0",
+        "vue-chat-scroll": "^1.4.0",
         "vue-currency-filter": "^4.0.3",
         "vue-moment": "^4.1.0"
     }

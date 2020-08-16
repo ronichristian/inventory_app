@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use App\Events\WebsocketDemoEvent;
 
 class PagesController extends Controller
 {
     public function index()
+    {
+        return view('auth.login');
+    }
+
+    public function home()
     {
         return view('dashboard.home');
     }
@@ -40,6 +46,12 @@ class PagesController extends Controller
     public function order_invoice()
     {
         return view('dashboard.order_invoice');
+    }
+
+    public function display_products()
+    {
+        broadcast(new WebsocketDemoEvent('some data'));
+        return view('buyer.display_products');
     }
 
    

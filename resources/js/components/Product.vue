@@ -160,10 +160,6 @@
                         </tr>
                     </tbody>            
                 </datatable>
-                <pagination :pagination="pagination" 
-                    @prev="fetchProducts(pagination.prevPageUrl)"
-                    @next="fetchProducts(pagination.nextPageUrl)">
-                </pagination>
             </div>
         </div>
     </div>
@@ -255,42 +251,21 @@ export default {
         addProduct(){
             if(this.edit === false)
             {
-                fetch('api/product',{
-                    method: 'post',
-                    body: JSON.stringify(this.product),
-                    headers:{
-                        'content-type': 'application/json'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    this.product.product_name = '';
-                    this.product.bar_code = '',
-                    this.product.srp = 0;
-                    this.product.product_price = '';
-                    this.product.product_qty = 0;
-                    this.product.category_id = '';
+                axios.post('/api/product', this.product)
+                .then(res => {
+                    this.clear();
                     swal("Done!", "Product Added", "success");
                     this.fetchProducts();
+                })
+                .catch(err => {
+                    swal("Oops", "Something went wrong", "error");
                 })
             }
             else
             {
-                fetch('api/product',{
-                    method: 'put',
-                    body: JSON.stringify(this.product),
-                    headers:{
-                        'content-type': 'application/json'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    this.product.product_name = '';
-                    this.product.bar_code = '',
-                    this.product.srp = 0;
-                    this.product.product_price = '';
-                    this.product.product_qty = 0;
-                    this.product.category_id = '';
+                axios.put('/api/product', this.product)
+                .then(res => {
+                    this.clear();
                     this.edit = false;
                     swal("Done!", "Product Updated", "success");
                     this.fetchProducts();
@@ -312,23 +287,20 @@ export default {
         deleteProduct(id){
             swal({
                 title: "Are you sure?",
-                text: "Confirm to Share List",
+                text: "Confirm to Delete Product",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        fetch(`/api/product/${id}`, {
-                            method: 'delete'
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            swal("Done!", "Product Delete", "success");
-                            this.fetchProducts();
-                        })
-                    }
-                });
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    axios.delete(`/api/product/${id}`)
+                    .then(data => {
+                        this.fetchProducts();
+                        swal("Done!", "Product Delete", "warning");
+                    })
+                }
+            });
         },
 
         clear(){
