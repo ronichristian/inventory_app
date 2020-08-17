@@ -15,7 +15,7 @@
 
 Auth::routes();
 
-Route::get('/', 'PagesController@index')->middleware('auth');
+Route::get('/', 'PagesController@index');
 Route::get('/home', 'PagesController@home')->middleware('auth')->name('home');
 Route::get('/products', 'PagesController@products')->middleware('auth');
 Route::get('/transaction', 'PagesController@transaction')->middleware('auth');

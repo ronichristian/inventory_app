@@ -75,14 +75,16 @@
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
-        <li  class="{{ Request::segment(1) === 'admin/users' ? 'nav-item active' : 'nav-item' }}">
-            <a class="nav-link" href="{{ route('admin.users.index') }}">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Manage Users</span></a>
-        </li>
+        @if(auth()->user()->hasAnyRole('admin'))
+            <li  class="{{ Request::segment(1) === 'admin/users' ? 'nav-item active' : 'nav-item' }}">
+                <a class="nav-link" href="{{ route('admin.users.index') }}">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>Manage Users</span></a>
+            </li>
+        @endif
 
         <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-fw fa-wrench"></i>
             <span>Utilities</span>
@@ -96,7 +98,7 @@
                 <a class="collapse-item" href="utilities-other.html">Other</a>
             </div>
             </div>
-        </li>
+        </li> --}}
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -127,11 +129,11 @@
             <span>Products</span></a>
         </li>
 
-        <li class="{{ Request::segment(1) === 'display_products' ? 'nav-item active' : 'nav-item' }}">
+        {{-- <li class="{{ Request::segment(1) === 'display_products' ? 'nav-item active' : 'nav-item' }}">
             <a class="nav-link" href="{{ url('display_products') }}">
             <i class="fas fa-fw fa-table"></i>
             <span>Buy Products</span></a>
-        </li>
+        </li> --}}
 
         <li class="{{ Request::segment(1) === 'chats' ? 'nav-item active' : 'nav-item' }}">
             <a class="nav-link" href="{{ url('chats') }}">

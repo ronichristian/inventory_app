@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -26,6 +27,19 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+
+    public function redirectTo()
+    {
+        if (auth()->user()->roles()->first()->name == 'admin') {
+            return '/home';
+        } else if (auth()->user()->roles()->first()->name == 'vendor') {
+            return '/products';
+        } else if (auth()->user()->roles()->first()->name == 'buyer') {
+            return '/products';
+        } else {
+            return '/';
+        }
+    }
 
     /**
      * Create a new controller instance.
