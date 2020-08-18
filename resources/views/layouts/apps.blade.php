@@ -129,11 +129,11 @@
             <span>Products</span></a>
         </li>
 
-        {{-- <li class="{{ Request::segment(1) === 'display_products' ? 'nav-item active' : 'nav-item' }}">
+        <li class="{{ Request::segment(1) === 'display_products' ? 'nav-item active' : 'nav-item' }}">
             <a class="nav-link" href="{{ url('display_products') }}">
             <i class="fas fa-fw fa-table"></i>
-            <span>Buy Products</span></a>
-        </li> --}}
+            <span>My Products</span></a>
+        </li>
 
         <li class="{{ Request::segment(1) === 'chats' ? 'nav-item active' : 'nav-item' }}">
             <a class="nav-link" href="{{ url('chats') }}">

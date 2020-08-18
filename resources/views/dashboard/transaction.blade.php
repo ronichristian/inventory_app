@@ -9,7 +9,7 @@
     
     <!-- DataTales Example -->
     <div id="transaction">
-        <transaction />
+        <transaction :user="{{ auth()->user()->id }}" />
     </div>
     
     

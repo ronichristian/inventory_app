@@ -97,6 +97,37 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
+                <!-- <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Code</th>
+                            <th>SRP</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-bind:key="product.id" v-for="product in products">
+                            <td>{{ product.product_name }}</td>
+                            <td style="font-weight:900">{{ product.bar_code }}</td>
+                            <td align="right" style="font-weight:900">{{ product.srp | currency }}</td>
+                            <td align="right" style="color:green; font-weight:900">{{ product.product_price | currency }}</td>
+
+                            <td align="center" v-if="product.product_qty == 0" style="color:red; ">Out of Stock</td>
+                            <td align="center" v-else-if="product.product_qty < 30" style="color:red; font-weight:900">{{ product.product_qty }}</td>
+                            <td align="center" v-else style="color:green;">{{ product.product_qty }}</td>
+
+                            <td >{{ product.category_name }}</td>
+                            <td>
+                                <button @click="editProduct(product)" data-toggle="modal" data-target="#addProduct" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
+                                <button @click="deleteProduct(product.id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> -->
 
                 <div class="tableFilters">
                     <input class="form-control float-left col-9" type="text" v-model="tableData.search" placeholder="Search"
@@ -122,12 +153,9 @@
                             <td align="center" v-else style="color:green;">{{ product.product_qty }}</td>
 
                             <td >{{ product.category_name }}</td>
-                            <td >
-                                <button v-if="product.user_id == user" @click="editProduct(product)" data-toggle="modal" data-target="#addProduct" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                <button v-else disabled @click="editProduct(product)" data-toggle="modal" data-target="#addProduct" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-
-                                <button v-if="product.user_id == user" @click="deleteProduct(product.id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                <button v-else disabled @click="deleteProduct(product.id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                            <td>
+                                <button @click="editProduct(product)" data-toggle="modal" data-target="#addProduct" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
+                                <button @click="deleteProduct(product.id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                             </td>
                         </tr>
                     </tbody>            
@@ -187,7 +215,6 @@ export default {
                 search: '',
                 column: 0,
                 dir: 'desc',
-                user_id: this.user,
             },
             pagination: {
                 lastPage: '',
@@ -204,11 +231,10 @@ export default {
 
     created(){
         this.fetchProducts();
-        this.featchCategories();
     },
 
     methods: {
-        fetchProducts(url = 'api/get_products_joined'){
+        fetchProducts(url = 'api/get_my_products_joined'){
             this.tableData.draw++;
             axios.get(url, {params: this.tableData})
                 .then(response => {
@@ -221,87 +247,6 @@ export default {
                 .catch(errors => {
                     console.log(errors);
                 });
-        },
-
-        addProduct(){
-            if(this.edit === false)
-            {
-                axios.post('/api/product', this.product)
-                .then(res => {
-                    this.clear();
-                    swal("Done!", "Product Added", "success");
-                    this.fetchProducts();
-                })
-                .catch(err => {
-                    swal("Oops", "Something went wrong", "error");
-                })
-            }
-            else
-            {
-                axios.put('/api/product', this.product)
-                .then(res => {
-                    this.clear();
-                    this.edit = false;
-                    swal("Done!", "Product Updated", "success");
-                    this.fetchProducts();
-                })
-            }
-        },
-
-        editProduct(product){
-            this.edit = true;
-            this.product.id = product.id;
-            this.product.product_name = product.product_name;
-            this.product.bar_code = product.bar_code;
-            this.product.srp = product.srp;
-            this.product.product_price = product.product_price;
-            this.product.product_qty = product.product_qty;
-            this.product.category_id = product.category_id
-        },
-
-        deleteProduct(id){
-            swal({
-                title: "Are you sure?",
-                text: "Confirm to Delete Product",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    axios.delete(`/api/product/${id}`)
-                    .then(data => {
-                        this.fetchProducts();
-                        swal("Done!", "Product Delete", "warning");
-                    })
-                }
-            });
-        },
-
-        clear(){
-            this.product.product_name = '';
-            this.product.bar_code = '',
-            this.product.srp = '';
-            this.product.product_price = '';
-            this.product.product_qty = '';
-            this.product.category_id = '';
-            this.edit = false;
-        },
-
-        featchCategories(){
-            fetch('api/categories')
-            .then(res => res.json())
-            .then(res => {
-                this.categories = res.data
-            })
-        },
-
-      fetchGrandTotal(){
-            fetch('api/sales_invoice_gt')
-            .then(res => res.json())
-            .then(res => {
-                this.sum_grand_total = res.data[0];
-            })
         },
 
         configPagination(data){

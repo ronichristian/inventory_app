@@ -38,6 +38,12 @@ Route::put('product', 'ProductsController@store');
 Route::delete('product/{id}', 'ProductsController@destroy');
 
 
+// List Products
+Route::get('/my_products', 'ProductsController@my_products');
+Route::get('/get_my_products', 'ProductsController@get_my_products');
+Route::get('/get_my_products_joined', 'ProductsController@get_my_products_joined');
+
+
 // List of Invoices
 Route::get('get_sales_invoices', 'SalesInvoiceController@get_sales_invoices');
 Route::get('sales_invoice_gt', 'SalesInvoiceController@grand_total');

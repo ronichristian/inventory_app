@@ -79,6 +79,7 @@
 
 <script>
 export default {
+    props:['user'],
     data() {
         return {
             products: [],
@@ -91,6 +92,7 @@ export default {
             product_qty: '',
             product_name: '',
             edit: false,
+            user: this.user
         }
     },
 
@@ -100,10 +102,9 @@ export default {
 
     methods: {
         fetchProducts(){
-            fetch('api/products')
-            .then(res => res.json())
+            axios.get('api/my_products', {params: this.user})
             .then(res => {
-                this.products = res.data;
+                this.products = res.data.data;
             })
         },
 
@@ -124,20 +125,16 @@ export default {
             if(this.edit === false)
             {
                 console.log(this.order_details);
-                fetch('api/order_invoice', {
-                    method: 'post',
-                    body: JSON.stringify(this.order_details),
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
+                axios.post('/api/order_invoice', this.order_details)
+                .then(res => {
                     swal("Done!", "Order Successful", "success");
                     this.order_details = [];
                     this.product_id = '';
                     this.product_srp = '';
                     this.product_qty = '';
+                })
+                .catch(err => {
+                    swal("Oops", "Something went wrong", "error");
                 })
             }
         },

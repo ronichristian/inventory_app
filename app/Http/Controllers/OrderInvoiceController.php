@@ -11,6 +11,8 @@ use App\OrderInvoiceDetails;
 use App\Http\Resources\OrderInvoice as OrderInvoiceResources;
 use App\Http\Resources\OrderInvoiceDetail as OrderInvoiceDetailsResources;
 use DB;
+use Auth;
+use App\User;
 
 class OrderInvoiceController extends Controller
 {
@@ -62,6 +64,7 @@ class OrderInvoiceController extends Controller
         ->select('products.product_name', 'order_invoice_details.product_srp', 'order_invoice_details.product_qty', 'order_invoice_details.sub_total', 'order_invoices.grand_total')
         ->where('order_invoice_details.order_invoice_id', $id)
         ->get();
+
         return new OrderInvoiceDetailsResources($order_invoice);
     }
 
@@ -74,6 +77,7 @@ class OrderInvoiceController extends Controller
     public function store(Request $request)
     {
         $order_invoice = new OrderInvoice;
+        $order_invoice->user_id = 2;
         $order_invoice->grand_total = 0;
         $order_invoice->save();
 

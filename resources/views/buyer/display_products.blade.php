@@ -2,11 +2,11 @@
 
 @section('content')
 
-    <h1 class="h3 mb-2 text-gray-800">CATEGORIES</h1>
+    <h1 class="h3 mb-2 text-gray-800">MY PRODUCTS</h1>
     <!-- DataTales Example -->
     <div id="category">
-        <category />
+        <my-products :user="{{ auth()->user()->id }}" />
     </div>
     
-    <script src="/js/sweetalert.min.js"></script>
+    {{-- <script src="/js/sweetalert.min.js"></script> --}}
 @endsection

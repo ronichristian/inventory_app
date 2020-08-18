@@ -5,7 +5,7 @@
     <h1 class="h3 mb-2 text-gray-800">PRODUCTS</h1>
     <!-- DataTales Example -->
     <div id="products">
-        <products />
+        <products :user="{{ auth()->user()->id }}"/>
     </div>
     
 @endsection

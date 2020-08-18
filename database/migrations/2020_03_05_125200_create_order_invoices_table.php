@@ -15,6 +15,7 @@ class CreateOrderInvoicesTable extends Migration
     {
         Schema::create('order_invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigIncrements('user_id');
             $table->double('grand_total');
             $table->timestamps();
         });

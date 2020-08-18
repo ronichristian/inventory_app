@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Product;
 use App\Category;
 use App\Http\Resources\Product as ProductsResources;
 use App\Http\Resources\Category as CategoryResources;
 use DB;
+use App\User;
 
 class ProductsController extends Controller
 {
@@ -39,7 +41,8 @@ class ProductsController extends Controller
 
         $query = DB::table('products')
         ->join('categories', 'categories.id', '=', 'products.category_id')
-        ->select('products.id', 'products.product_name', 'products.bar_code', 'products.srp', 'products.product_price', 'products.product_qty',  'categories.category_name')
+        ->select('products.user_id', 'products.id', 'products.product_name', 'products.bar_code', 'products.srp', 'products.product_price', 'products.product_qty',  'categories.category_name')
+        ->where('user_id', '=', $request->user_id)
         ->orderBy($columns[$column], $dir);
 
         if($searchValue){
@@ -83,6 +86,7 @@ class ProductsController extends Controller
     {
         $product = $request->isMethod('put') ? Product::findOrFail($request->id) : new Product;
         
+        $product->user_id = $request->user_id;
         $product->product_name = $request->input('product_name');
         $product->bar_code = $request->input('bar_code');
         $product->srp = $request->input('srp');
@@ -135,4 +139,64 @@ class ProductsController extends Controller
             return new CategoryResources($category);
         }
     }
+
+
+
+    public function my_products(Request $request)
+    {
+        $products = DB::table('products')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->select('products.user_id', 'products.id', 'products.product_name', 'products.bar_code', 'products.srp', 'products.product_price', 'products.product_qty',  'categories.category_name')
+        ->where('products.user_id', '=', $request[0] )
+        ->get();
+
+        return new ProductsResources($products);
+    }
+
+    public function get_my_products_joined(Request $request)
+    {
+        $columns = ['product_name', 'bar_code', 'srp', 'product_price', 'product_price', 'product_qty', 'category_name',];
+
+        $length = $request->input('length');
+        $column = $request->input('column');
+        $dir = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $query = DB::table('products')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->select('products.user_id', 'products.id', 'products.product_name', 'products.bar_code', 'products.srp', 'products.product_price', 'products.product_qty',  'categories.category_name')
+        ->where('products.user_id', '=', 1)
+        ->orderBy($columns[$column], $dir);
+
+        if($searchValue){
+            $query->where(function($query) use ($searchValue){
+                $query->where('product_name', 'like', '%' . $searchValue . '%')->
+                orWhere('bar_code', 'like', '%' . $searchValue . '%');
+            });
+        }
+        $products = $query->paginate($length);
+        return ['data' => $products, 'draw' => $request->input('draw')];
+    }
+
+    public function get_my_products(Request $request)
+    {
+        $columns = ['product_name', 'product_price', 'product_qty'];
+
+        $length = $request->input('length');
+        $column = $request->input('column');
+        $dir = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $query = Product::select('user_id', 'id', 'product_name', 'bar_code', 'product_price', 'product_qty' , 'category_id')->orderBy($columns[$column], $dir);
+
+        if($searchValue){
+            $query->where(function($query) use ($searchValue){
+                $query->where('product_name', 'like', '%' . $searchValue . '%')->
+                orWhere('bar_code', 'like', '%' . $searchValue . '%');
+            });
+        }
+        $products = $query->paginate($length);
+        return ['data' => $products, 'draw' => $request->input('draw')];
+    }
+
 }

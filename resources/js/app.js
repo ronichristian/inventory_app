@@ -47,6 +47,7 @@ Vue.component('order_invoice', require('./components/OrderInvoice.vue').default)
 Vue.component('capital_and_gross', require('./components/CapitalAndGross.vue').default);
 Vue.component('most_bought_graph', require('./components/MostBoughtProducts.vue').default);
 Vue.component('net_worth', require('./components/Home.vue').default);
+Vue.component('my-products', require('./components/MyProducts.vue').default);
 Vue.component('chats', require('./components/Chats.vue').default);
 
 
